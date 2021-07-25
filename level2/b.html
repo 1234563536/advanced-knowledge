@@ -1,0 +1,111 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-07-24 22:49:34
+ * @LastEditTime: 2021-07-25 12:20:50
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \node.js\a.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Async ball</title>
+    <style>
+        .ball1 {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            display: block;
+            width: 50px;
+            height: 50px;
+            background-color: aqua;
+            border-radius: 50%;
+            transform: translateX(0);
+        }
+        
+        .ball2 {
+            position: absolute;
+            left: 0px;
+            top: 50px;
+            display: block;
+            width: 50px;
+            height: 50px;
+            background-color: darkorange;
+            border-radius: 50%;
+            transform: translateX(0);
+        }
+        
+        .ball3 {
+            position: absolute;
+            left: 0px;
+            top: 100px;
+            display: block;
+            width: 50px;
+            height: 50px;
+            background-color: slategrey;
+            border-radius: 50%;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ball ball1"></div>
+    <div class="ball ball2"></div>
+    <div class="ball ball3"></div>
+    <script>
+        const ball1 = document.querySelector('.ball1')
+        const ball2 = document.querySelector('.ball2')
+        const ball3 = document.querySelector('.ball3')
+
+        // demo 使用时只把相应注释取消就行
+
+
+
+        // Promise 用法的 demo
+
+        function move(obj, target) {
+            // TODO
+            return new Promise(function(resolve, reject) {
+                clearInterval(obj.timer);
+                obj.timer = setInterval(function() {
+                    // 步长值写到定时器的里面
+                    var step = (target - obj.offsetLeft) / 10;
+                    if (obj.offsetLeft == target) {
+                        // 停止动画 本质是停止定时器
+                        clearInterval(obj.timer);
+                    }
+                    // 把每次加1 这个步长值改为一个慢慢变小的值  步长公式：(目标值 - 现在的位置) / 10
+                    obj.style.left = obj.offsetLeft + step + 'px';
+                }, 60);
+                setTimeout(function() {
+                    if (obj.timer) {
+                        resolve("success");
+                    } else {
+                        reject("error");
+                    }
+
+                }, 2000)
+            })
+        }
+        move(ball1, 300).then(function onFulfilled(value) {
+            move(ball2, 300).then(function onFulfilled(value) {
+                move(ball3, 300).then(function onFulfilled(value) {
+                    alert(value + "三个球都成功啦！")
+                }).catch(function onRejected(error) {
+                    alert(error + "第三个球出错啦")
+                })
+            }).catch(function onRejected(error) {
+                alert(error + "第二个球出错啦")
+            })
+        }).catch(function onRejected(error) {
+            alert(error + "第一个球出错啦");
+        })
+    </script>
+</body>
+
+</html>
